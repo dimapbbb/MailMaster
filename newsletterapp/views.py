@@ -25,7 +25,7 @@ class NewsletterListView(ListView):
 class NewsletterCreateView(CreateView):
     model = Newsletter
     fields = ('title', 'topic', 'content')
-    success_url = reverse_lazy('newsletter:list')
+    success_url = reverse_lazy('newsletter:newsletters_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,11 +39,11 @@ class NewsletterUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Изменить"
+        context["title"] = "Редактирование"
         return context
 
     def get_success_url(self):
-        return reverse('newsletter:read', args=[self.kwargs.get('pk')])
+        return reverse('newsletter:newsletter_read', args=[self.kwargs.get('pk')])
 
 
 class NewsletterDetailView(DetailView):
@@ -57,4 +57,4 @@ class NewsletterDetailView(DetailView):
 
 class NewsletterDeleteView(DeleteView):
     model = Newsletter
-    success_url = reverse_lazy('newsletter:list')
+    success_url = reverse_lazy('newsletter:newsletters_list')
