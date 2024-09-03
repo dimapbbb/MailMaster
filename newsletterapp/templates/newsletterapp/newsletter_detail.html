@@ -13,8 +13,8 @@
         <li class="list-group-item">A third item</li>
     </ul>
     <div class="card-body">
-        <a href="{% url 'newsletterapp:update' object.pk %}" class="card-link">Редактировать</a>
-        <a href="{% url 'newsletterapp:delete' object.pk %}" class="card-link">Удалить</a>
+        <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="card-link">Редактировать</a>
+        <a href="{% url 'newsletterapp:newsletter_delete' object.pk %}" class="card-link">Удалить</a>
     </div>
 </div>
 {% endblock %}

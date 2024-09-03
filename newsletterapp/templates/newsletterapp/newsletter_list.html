@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row mb-5">
     <a class="p-2 btn btn-outline-primary" href="/create/">Создать новую</a>
     {% for object in object_list %}
     <div class="card" style="width: 18rem;">
@@ -10,8 +10,8 @@
             <h5 class="card-title">{{ object.title }}</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">{{ object.topic }}</h6>
             <p class="card-text">{{ object.content }}</p>
-            <a href="{% url 'newsletterapp:read' object.pk %}" class="card-link">Просмотр</a>
-            <a href="{% url 'newsletterapp:update' object.pk %}" class="card-link">Редактировать</a>
+            <a href="{% url 'newsletterapp:newsletter_read' object.pk %}" class="card-link">Просмотр</a>
+            <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="card-link">Редактировать</a>
         </div>
     </div>
     {% endfor %}

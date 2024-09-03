@@ -7,6 +7,8 @@ class Newsletter(models.Model):
     topic = models.CharField(max_length=200, verbose_name="Тема рассылки")
     content = models.TextField(verbose_name="Содержимое рассылки")
 
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", blank=True, null=True)
+
     def __str__(self):
         return f"{self.title}, {self.topic}"
 

@@ -13,9 +13,9 @@ app_name = NewsletterappConfig.name
 
 urlpatterns = [
     path('', home, name='home'),
-    path('newsletters/', NewsletterListView.as_view(), name="list"),
-    path('create/', NewsletterCreateView.as_view(), name="create"),
-    path('update/<int:pk>/', NewsletterUpdateView.as_view(), name="update"),
-    path('read/<int:pk>/', NewsletterDetailView.as_view(), name="read"),
-    path('delete/<int:pk>/', NewsletterDeleteView.as_view(), name="delete"),
+    path('newsletters/', NewsletterListView.as_view(), name="newsletters_list"),
+    path('create/', NewsletterCreateView.as_view(), name="newsletter_create"),
+    path('update/<int:pk>/', NewsletterUpdateView.as_view(), name="newsletter_update"),
+    path('read/<int:pk>/', NewsletterDetailView.as_view(), name="newsletter_read"),
+    path('delete/<int:pk>/', NewsletterDeleteView.as_view(), name="newsletter_delete"),
 ]
