@@ -19,7 +19,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'newsletterapp',
-    'recepients'
+    'recepients',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [

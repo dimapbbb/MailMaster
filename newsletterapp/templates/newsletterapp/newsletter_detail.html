@@ -8,9 +8,10 @@
         <p class="card-text">{{ object.content }}</p>
     </div>
     <ul class="list-group list-group-flush">
-        <li class="list-group-item">An item</li>
-        <li class="list-group-item">A second item</li>
-        <li class="list-group-item">A third item</li>
+        <li class="list-group-item">{{ object.start_date }}</li>
+        <li class="list-group-item">{{ object.send_time }}</li>
+        <li class="list-group-item">{{ object.periodicity }}</li>
+        <li class="list-group-item">Статус: {{ object.status }}</li>
     </ul>
     <div class="card-body">
         <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="card-link">Редактировать</a>

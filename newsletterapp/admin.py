@@ -10,4 +10,4 @@ class NewsletterAdmin(admin.ModelAdmin):
 
 @admin.register(NewsletterSettings)
 class NewsletterSettingsAdmin(admin.ModelAdmin):
-    list_display = ('newsletter', 'start_datetime', 'periodicity', 'status')
+    list_display = ('newsletter', 'start_date', 'send_time', 'periodicity', 'status')
