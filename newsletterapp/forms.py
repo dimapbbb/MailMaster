@@ -14,4 +14,4 @@ class NewsletterSettingsForm(forms.ModelForm):
 
     class Meta:
         model = NewsletterSettings
-        fields = ('start_datetime', 'periodicity', 'status')
+        fields = ('start_date', 'send_time', 'periodicity', 'status')
