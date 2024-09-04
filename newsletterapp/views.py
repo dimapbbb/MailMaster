@@ -38,21 +38,27 @@ class NewsletterCreateView(CreateView):
             context["formset"] = NewsletterSettingsFormset(self.request.POST)
         else:
             context["formset"] = NewsletterSettingsFormset()
-        print(context["formset"])
         return context
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
         self.object = form.save()
+
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
+
+            # При создании автоматически сохраняет дату след отправки равной дате первой отправки
+            settings = NewsletterSettings.objects.get(newsletter=self.object.pk)
+            settings.next_send_day = settings.start_date
+            settings.save()
+
         return super().form_valid(form)
 
 
 class NewsletterUpdateView(UpdateView):
     model = Newsletter
-    fields = ('title', 'topic', 'content')
+    form_class = NewsletterSettingsForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,7 +69,6 @@ class NewsletterUpdateView(UpdateView):
             context["formset"] = NewsletterSettingsFormset(self.request.POST, instance=self.object)
         else:
             context["formset"] = NewsletterSettingsFormset(instance=self.object)
-
         return context
 
     def form_valid(self, form):
@@ -89,6 +94,7 @@ class NewsletterDetailView(DetailView):
         self.object.start_date = settings.start_date
         self.object.send_time = settings.send_time
         self.object.periodicity = settings.periodicity
+        self.object.next_send_day = settings.next_send_day
         if settings.status:
             self.object.status = "Активная"
         else:

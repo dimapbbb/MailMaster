@@ -14,6 +14,4 @@ class NewsletterSettingsForm(forms.ModelForm):
 
     class Meta:
         model = NewsletterSettings
-        fields = ('start_date', 'send_time', 'periodicity', 'status')
-
- # Сделать валидацию форм
+        fields = ('start_date', 'send_time', 'periodicity', 'status', 'next_send_day')

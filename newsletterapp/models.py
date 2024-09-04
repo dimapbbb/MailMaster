@@ -19,9 +19,10 @@ class Newsletter(models.Model):
 class NewsletterSettings(models.Model):
     newsletter = models.OneToOneField(Newsletter, models.CASCADE)
 
-    start_date = models.DateField(blank=True, null=True, verbose_name="Дата начала")
+    start_date = models.DateField(blank=True, null=True, verbose_name="Дата первой отправки")
     send_time = models.TimeField(blank=True, null=True, verbose_name="Время отправки")
-    periodicity = models.IntegerField(verbose_name="Периодичность отправки в днях", default=0)
+    periodicity = models.PositiveIntegerField(verbose_name="Периодичность отправки в днях", default=0)
+    next_send_day = models.DateField(verbose_name="Дата следующей отправки", blank=True, null=True)
     status = models.BooleanField(default=False, verbose_name="Статус")
 
     def __str__(self):

@@ -8,8 +8,9 @@
         <p class="card-text">{{ object.content }}</p>
     </div>
     <ul class="list-group list-group-flush">
-        <li class="list-group-item">Дата первой отправки{{ object.start_date }}</li>
+        <li class="list-group-item">Дата создания: {{ object.created_at }}</li>
         <li class="list-group-item">Время отправки: {{ object.send_time }}</li>
+        <li class="list-group-item">Дата следующей отправки: {{ object.next_send_day }}</li>
         <li class="list-group-item">Периодичность раз в {{ object.periodicity }} дней</li>
         <li class="list-group-item">Статус: {{ object.status }}</li>
     </ul>
