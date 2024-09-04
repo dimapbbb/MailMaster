@@ -82,19 +82,19 @@ class NewsletterUpdateView(UpdateView):
 class NewsletterDetailView(DetailView):
     model = Newsletter
 
-    # def get_object(self, queryset=None):
-    #     self.object = super().get_object(queryset)
-    #     newsletter_id = self.kwargs.get('pk')
-    #     settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
-    #     self.object.start_date = settings.start_date
-    #     self.object.send_time = settings.send_time
-    #     self.object.periodicity = settings.periodicity
-    #     if settings.status:
-    #         self.object.status = "Активная"
-    #     else:
-    #         self.object.status = "Не активная"
-    #     self.object.save()
-    #     return self.object
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        newsletter_id = self.kwargs.get('pk')
+        settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
+        self.object.start_date = settings.start_date
+        self.object.send_time = settings.send_time
+        self.object.periodicity = settings.periodicity
+        if settings.status:
+            self.object.status = "Активная"
+        else:
+            self.object.status = "Не активная"
+        self.object.save()
+        return self.object
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
