@@ -4,7 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
-from newsletterapp.models import Newsletter, NewsletterSettings
+from newsletterapp.models import Newsletter, NewsletterSettings, NewsletterLogs
 
 
 def home(request):
@@ -86,17 +86,23 @@ class NewsletterDetailView(DetailView):
         self.object = super().get_object(queryset)
         newsletter_id = self.kwargs.get('pk')
         settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
-        if settings.last_send_date:
-            self.object.last_send_date = settings.last_send_date
-        else:
-            self.object.last_send_date = "Еще не отправлялась"
+
+        self.object.last_send_date = settings.last_send_date
+
         self.object.send_time = settings.send_time
-        self.object.periodicity = settings.periodicity
-        self.object.next_send_day = settings.next_send_day
+
+        if settings.periodicity:
+            self.object.periodicity = f"Раз в {settings.periodicity} дней"
+            self.object.next_send_day = settings.next_send_day
+        else:
+            self.object.periodicity = "Отключена"
+            self.object.next_send_day = "Отключена"
+
         if settings.status:
             self.object.status = "Активная"
         else:
             self.object.status = "Не активная"
+
         self.object.save()
         return self.object
 
@@ -109,3 +115,17 @@ class NewsletterDetailView(DetailView):
 class NewsletterDeleteView(DeleteView):
     model = Newsletter
     success_url = reverse_lazy('newsletter:newsletters_list')
+
+
+class NewsletterLogsListView(ListView):
+    model = NewsletterLogs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "История рассылки"
+        return context
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(newsletter=self.kwargs.get('pk'))
+        return queryset

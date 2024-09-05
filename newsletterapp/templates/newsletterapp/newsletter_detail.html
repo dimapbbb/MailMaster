@@ -10,13 +10,14 @@
     <ul class="list-group list-group-flush">
         <li class="list-group-item">Дата создания: {{ object.created_at }}</li>
         <li class="list-group-item">Время отправки: {{ object.send_time }}</li>
-        <li class="list-group-item">Дата следующей отправки: {{ object.next_send_day }}</li>
-        <li class="list-group-item">Дата последней отправки: {{ object.last_send_date }}</li>
-        <li class="list-group-item">Периодичность раз в {{ object.periodicity }} дней</li>
+        <li class="list-group-item">Следующяя отправка: {{ object.next_send_day }}</li>
+        <li class="list-group-item">Последняя отправка: {{ object.last_send_date }}</li>
+        <li class="list-group-item">Периодичность: {{ object.periodicity }}</li>
         <li class="list-group-item">Статус: {{ object.status }}</li>
     </ul>
     <div class="card-body">
         <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="card-link">Редактировать</a>
+        <a href="{% url 'newsletterapp:history' object.pk %}" class="card-link">Посмотреть историю</a>
         <a href="{% url 'newsletterapp:newsletter_delete' object.pk %}" class="card-link">Удалить</a>
     </div>
 </div>
