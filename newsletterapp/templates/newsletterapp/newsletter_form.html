@@ -20,34 +20,8 @@
             <div class="card">
                 {{ formset.management_form }}
                 {% for form in formset.forms %}
-                <div class="col">
-                    {{ form.non_field_errors }}
-                    <div class="row-6 mb-4">
-                        <div class="col">
-                            <div class="row-6 mb-4">
-                                <label for="id_newslettersettings-0-start_date">Дата начала:</label>
-                                <input type="date" name="newslettersettings-0-start_date"
-                                       id="id_newslettersettings-0-start_date">
-                            </div>
-                            <div class="row-6 mb-4">
-                                <label for="id_newslettersettings-0-send_time">Время отправки:</label>
-                                <input type="time" name="newslettersettings-0-send_time" value=""
-                                       id="id_newslettersettings-0-send_time">
-                            </div>
-                            <div class="row-6 mb-4">
-                                <label for="id_newslettersettings-0-periodicity">Периодичность отправки в днях:</label>
-                                <input type="number" name="newslettersettings-0-periodicity" placeholder="Выключена"
-                                       id="id_newslettersettings-0-periodicity">
-                            </div>
-                            <div class="row-6 mb-4">
-                                <label for="id_newslettersettings-0-status">Активная:</label>
-                                <input type="checkbox" name="newslettersettings-0-status"
-                                       id="id_newslettersettings-0-status">
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+                {{ form.as_p }}
+                {% endfor %}
             </div>
         </div>
     </form>

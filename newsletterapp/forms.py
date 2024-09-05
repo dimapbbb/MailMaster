@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 
 from newsletterapp.models import Newsletter, NewsletterSettings
@@ -14,4 +16,10 @@ class NewsletterSettingsForm(forms.ModelForm):
 
     class Meta:
         model = NewsletterSettings
-        fields = ('start_date', 'send_time', 'periodicity', 'status', 'next_send_day')
+        fields = ('next_send_day', 'send_time', 'periodicity', 'status')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields.get('next_send_day').widget.input_type = "date"
+        self.fields.get('send_time').widget.input_type = "time"

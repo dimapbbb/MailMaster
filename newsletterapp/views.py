@@ -48,17 +48,12 @@ class NewsletterCreateView(CreateView):
             formset.instance = self.object
             formset.save()
 
-            # При создании автоматически сохраняет дату след отправки равной дате первой отправки
-            settings = NewsletterSettings.objects.get(newsletter=self.object.pk)
-            settings.next_send_day = settings.start_date
-            settings.save()
-
         return super().form_valid(form)
 
 
 class NewsletterUpdateView(UpdateView):
     model = Newsletter
-    form_class = NewsletterSettingsForm
+    form_class = NewsletterForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -91,7 +86,10 @@ class NewsletterDetailView(DetailView):
         self.object = super().get_object(queryset)
         newsletter_id = self.kwargs.get('pk')
         settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
-        self.object.start_date = settings.start_date
+        if settings.last_send_date:
+            self.object.last_send_date = settings.last_send_date
+        else:
+            self.object.last_send_date = "Еще не отправлялась"
         self.object.send_time = settings.send_time
         self.object.periodicity = settings.periodicity
         self.object.next_send_day = settings.next_send_day
