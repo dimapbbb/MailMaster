@@ -91,17 +91,19 @@ class NewsletterDetailView(DetailView):
 
         self.object.send_time = settings.send_time
 
+        self.object.next_send_day = settings.next_send_day
+
         if settings.periodicity:
             self.object.periodicity = f"Раз в {settings.periodicity} дней"
-            self.object.next_send_day = settings.next_send_day
+
         else:
             self.object.periodicity = "Отключена"
-            self.object.next_send_day = "Отключена"
 
         if settings.status:
             self.object.status = "Активная"
         else:
             self.object.status = "Не активная"
+            self.object.next_send_day = "Отключена"
 
         self.object.save()
         return self.object
