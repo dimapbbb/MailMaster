@@ -19,15 +19,30 @@ class Newsletter(models.Model):
 class NewsletterSettings(models.Model):
     newsletter = models.OneToOneField(Newsletter, models.CASCADE)
 
-    start_date = models.DateField(blank=True, null=True, verbose_name="Дата первой отправки")
+    last_send_date = models.DateField(blank=True, null=True, verbose_name="Дата последней отправки")
     send_time = models.TimeField(blank=True, null=True, verbose_name="Время отправки")
     periodicity = models.PositiveIntegerField(verbose_name="Периодичность отправки в днях", default=0)
-    next_send_day = models.DateField(verbose_name="Дата следующей отправки", blank=True, null=True)
+    next_send_day = models.DateField(verbose_name="Дата ближайшей отправки", blank=True, null=True)
     status = models.BooleanField(default=False, verbose_name="Статус")
 
     def __str__(self):
-        return f"{self.start_date}, {self.periodicity}, {self.status}"
+        return f"{self.next_send_day}, {self.periodicity}, {self.status}"
 
     class Meta:
         verbose_name = "Настройка"
         verbose_name_plural = "Настройки"
+
+
+class NewsletterLogs(models.Model):
+    newsletter = models.ForeignKey(Newsletter, models.CASCADE)
+    send_date = models.DateField(blank=True, null=True, verbose_name="Дата отправки")
+    send_time = models.TimeField(blank=True, null=True, verbose_name="Время отправки")
+    status = models.BooleanField(verbose_name="Статус")
+    server_answer = models.TextField(verbose_name="Ответ почтового сервера")
+
+    def __str__(self):
+        return f"{self.send_date}, {self.status}"
+
+    class Meta:
+        verbose_name = "Отправка"
+        verbose_name_plural = "История отправок"

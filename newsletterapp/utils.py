@@ -1,3 +1,4 @@
+import smtplib
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.mail import send_mail
@@ -25,17 +26,22 @@ def check_db():
             # Формирование получателей
             recipients = [recipient.email for recipient in Client.objects.all()]
             # Вызов функции отправки
-            send_newsletter(recipients, mail.topic, mail.content)
+            send_newsletter(recipients, mail)
             # перезаписывание даты след отправки
+            newsletter.last_send_day = newsletter.next_send_day
             newsletter.next_send_day += timedelta(days=newsletter.periodicity)
             newsletter.save()
 
 
-def send_newsletter(email_list, subject, message):
+def send_newsletter(email_list, newsletter):
     """ Отправляет письмо списку получателей"""
-    send_mail(
-        subject,
-        message,
-        settings.EMAIL_HOST_USER,
-        email_list,
-    )
+    try:
+        send_mail(
+            newsletter.topic,
+            newsletter.content,
+            settings.EMAIL_HOST_USER,
+            email_list,
+            fail_silently=False
+        )
+    except smtplib.SMTPException as fail:
+        print(fail)
