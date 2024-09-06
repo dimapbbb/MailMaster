@@ -23,6 +23,21 @@ class NewsletterListView(ListView):
         context["title"] = "Мои рассылки"
         return context
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        state = self.kwargs.get('state')
+
+        if state == 'activ':
+            queryset = queryset.filter(newslettersettings__status=True)
+        elif state == 'not_activ':
+            queryset = queryset.filter(newslettersettings__status=False)
+
+        for obj in queryset:
+            newsletter = NewsletterSettings.objects.get(newsletter=obj.pk)
+            obj.status = newsletter.status
+            obj.last_send_date = newsletter.last_send_date
+        return queryset
+
 
 class NewsletterCreateView(CreateView):
     model = Newsletter
