@@ -2,18 +2,35 @@
 
 {% block content %}
 
-<div class="row mb-5">
-    <a class="p-2 btn btn-outline-primary" href="/create/">Создать новую</a>
-    {% for object in object_list %}
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">{{ object.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">{{ object.topic }}</h6>
-            <p class="card-text">{{ object.content }}</p>
-            <a href="{% url 'newsletterapp:newsletter_read' object.pk %}" class="card-link">Просмотр</a>
-            <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="card-link">Редактировать</a>
+<div class="row">
+
+    <div class="col-2">
+        {% include 'includes/inc_buttons_for_newsletter_list.html' %}
+    </div>
+
+    <div class="col-10">
+        <div class="container">
+            <div class="box">
+                {% for object in object_list %}
+
+                <a href="{% url 'newsletterapp:newsletter_read' object.pk %}"
+                   {% if object.status %}
+                   class="card text-bg-success mb-3"
+                   {% else %}
+                   class="card text-bg-danger mb-3"
+                   {% endif %}>
+
+                    <div class="card-body">
+                        <h3 class="card-title">{{ object.title }}</h3>
+                        <h6 class="card-subtitle">Тема: {{ object.topic }}</h6>
+                        <p class="card-text">Сообщение: {{ object.content }}</p>
+                        <p class="card-footer">Последняя отправка: {{ object.last_send_date }}</p>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
         </div>
     </div>
-    {% endfor %}
 </div>
+
 {% endblock %}

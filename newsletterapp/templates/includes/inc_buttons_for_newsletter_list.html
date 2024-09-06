@@ -1,0 +1,15 @@
+<div class="col mb-3">
+    <a style="width=100%;" class="p-2 btn btn-outline-primary" href="/create/">Новая рассылка</a>
+</div>
+<div class="col mb-3">
+    <a class="p-2 btn btn-outline-primary" href="#">История отправок</a>
+</div>
+<div class="col mb-3">
+    <a class="p-2 btn btn-primary" href="{% url 'newsletterapp:newsletters_list' 'all' %}">Показать все</a>
+</div>
+<div class="col mb-3">
+    <a class="p-2 btn btn-success" href="{% url 'newsletterapp:newsletters_list' 'activ' %}">Активные</a>
+</div>
+<div class="col mb-3">
+    <a class="p-2 btn btn-danger" href="{% url 'newsletterapp:newsletters_list' 'not_activ' %}">Не активные</a>
+</div>
