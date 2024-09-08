@@ -19,6 +19,7 @@
         <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="card-link">Редактировать</a>
         <a href="{% url 'newsletterapp:history' object.pk %}" class="card-link">Посмотреть историю</a>
         <a href="{% url 'newsletterapp:newsletter_delete' object.pk %}" class="card-link">Удалить</a>
+        <a href="{% url 'newsletterapp:confirm_send' object.pk %}" class="card-link">Разослать сейчас</a>
     </div>
 </div>
 {% endblock %}

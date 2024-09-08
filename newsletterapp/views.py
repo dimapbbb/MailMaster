@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
 from newsletterapp.models import Newsletter, NewsletterSettings, NewsletterLogs
+from newsletterapp.utils import send_newsletter
 
 
 def home(request):
@@ -25,8 +26,8 @@ class NewsletterListView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        state = self.kwargs.get('state')
 
+        state = self.kwargs.get('state')
         if state == 'activ':
             queryset = queryset.filter(newslettersettings__status=True)
         elif state == 'not_activ':
@@ -42,7 +43,6 @@ class NewsletterListView(ListView):
 class NewsletterCreateView(CreateView):
     model = Newsletter
     form_class = NewsletterForm
-    success_url = reverse_lazy('newsletter:newsletters_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,6 +64,9 @@ class NewsletterCreateView(CreateView):
             formset.save()
 
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('newsletter:newsletters_list', args=['all'])
 
 
 class NewsletterUpdateView(UpdateView):
@@ -131,7 +134,9 @@ class NewsletterDetailView(DetailView):
 
 class NewsletterDeleteView(DeleteView):
     model = Newsletter
-    success_url = reverse_lazy('newsletter:newsletters_list')
+
+    def get_success_url(self):
+        return reverse('newsletter:newsletters_list', args=['all'])
 
 
 class NewsletterLogsListView(ListView):
@@ -146,3 +151,14 @@ class NewsletterLogsListView(ListView):
         queryset = super().get_queryset(*args, **kwargs)
         queryset = queryset.filter(newsletter=self.kwargs.get('pk'))
         return queryset
+
+
+class ConfirmSend(TemplateView):
+    template_name = "newsletterapp/confirm_send.html"
+
+    def post(self, request, **kwargs):
+        """ Обработка POST запроса"""
+        context = super().get_context_data(**kwargs)
+        pk = context.get('pk')
+        send_newsletter(pk)
+        return redirect('newsletter:newsletters_list', context)

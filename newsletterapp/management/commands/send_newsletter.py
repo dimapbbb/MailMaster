@@ -1,15 +1,9 @@
 from django.core.management import BaseCommand
-from django.core.mail import send_mail
 
-from config import settings
+from newsletterapp.utils import send_newsletter
 
 
 class Command(BaseCommand):
 
-    def handle(self, *args, **options):
-        send_mail(
-            "Subject here",
-            "Here is the message.",
-            settings.EMAIL_HOST_USER,
-            ["1st.trillionaire.dm@gmail.com"],
-        )
+    def handle(self, newsletter_id, *args, **options):
+        send_newsletter(newsletter_id)
