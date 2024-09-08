@@ -1,35 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <div class="row">
-
-    <div class="col-2">
-        {% include 'includes/inc_buttons_for_newsletter_list.html' %}
+    <div class="col-2 mb-3">
+        <a style="width=100%;" class="p-2 btn btn-outline-primary" href="/create/">Новая рассылка</a>
     </div>
-
     <div class="col-10">
-        <div class="container">
-            <div class="box">
-                {% for object in object_list %}
-
-                <a href="{% url 'newsletterapp:newsletter_read' object.pk %}"
-                   {% if object.status %}
-                   class="card text-bg-success mb-3"
-                   {% else %}
-                   class="card text-bg-danger mb-3"
-                   {% endif %}>
-
-                    <div class="card-body">
-                        <h3 class="card-title">{{ object.title }}</h3>
-                        <h6 class="card-subtitle">Тема: {{ object.topic }}</h6>
-                        <p class="card-text">Сообщение: {{ object.content }}</p>
-                        <p class="card-footer">Последняя отправка: {{ object.last_send_date }}</p>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
+        <div class="btn-group">
+            <a class="p-2 btn btn-primary" href="{% url 'newsletterapp:newsletters_list' 'all' %}">Показать все</a>
+            <a class="p-2 btn btn-success" href="{% url 'newsletterapp:newsletters_list' 'activ' %}">Активные</a>
+            <a class="p-2 btn btn-danger" href="{% url 'newsletterapp:newsletters_list' 'not_activ' %}">Не активные</a>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="box">
+            {% for object in object_list %}
+
+            <a href="{% url 'newsletterapp:newsletter_read' object.pk %}"
+               {% if object.status %}
+               class="card text-bg-success mb-3"
+               {% else %}
+               class="card text-bg-danger mb-3"
+               {% endif %}>
+
+                <div class="card-body">
+                    <h3 class="card-title">{{ object.title }}</h3>
+                    <h6 class="card-subtitle">Тема: {{ object.topic }}</h6>
+                    <p class="card-text">Сообщение: {{ object.content }}</p>
+                    <p class="card-footer">Последняя отправка: {{ object.last_send_date }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
     </div>
 </div>
 

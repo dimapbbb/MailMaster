@@ -21,20 +21,19 @@ def check_db():
     for newsletter in newsletters:
         if str(newsletter.send_time)[:5] == str(current_date.time())[:5]:
 
-            mail = Newsletter.objects.get(id=newsletter.newsletter_id)
-            recipients = [recipient.email for recipient in Client.objects.all()]
-            log_data = {
-                "newsletter": mail,
-                "send_date": newsletter.next_send_day,
-                "send_time": newsletter.send_time,
-            }
-
-            send_newsletter(recipients, mail, log_data)
-            update_newsletter(newsletter)
+            send_newsletter(newsletter.newsletter_id)
 
 
-def send_newsletter(email_list, newsletter, log_data):
-    """ Отправляет письмо списку получателей"""
+def send_newsletter(newsletter_id):
+    """
+    Отправляет рассылку
+    """
+    send_mails(**newsletter_form(newsletter_id))
+    update_newsletter(NewsletterSettings.objects.get(newsletter=newsletter_id))
+
+
+def send_mails(email_list, newsletter, log_data):
+    """ Отправляет письмa списку получателей"""
     try:
         send_mail(
             newsletter.topic,
@@ -61,3 +60,19 @@ def update_newsletter(newsletter):
         newsletter.next_send_day = None
         newsletter.status = False
     newsletter.save()
+
+
+def newsletter_form(newsletter_id):
+    """
+    Формирование параметров для рассылки
+    """
+    newsletter = Newsletter.objects.get(pk=newsletter_id)
+    email_list = [recipient.email for recipient in Client.objects.all()]
+    log_data = {"newsletter": newsletter,
+                "send_date": datetime.now().date(),
+                "send_time": datetime.now().time()}
+    return {
+        "newsletter": newsletter,
+        "email_list": email_list,
+        "log_data": log_data
+    }
