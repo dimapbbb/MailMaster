@@ -35,10 +35,11 @@ class NewsletterSettings(models.Model):
 
 class NewsletterLogs(models.Model):
     newsletter = models.ForeignKey(Newsletter, models.CASCADE, related_name="logs")
-    send_date = models.DateField(blank=True, null=True, verbose_name="Дата отправки")
-    send_time = models.TimeField(blank=True, null=True, verbose_name="Время отправки")
+    send_date = models.DateField(auto_now_add=True, verbose_name="Дата отправки", blank=True, null=True)
+    send_time = models.TimeField(auto_now_add=True, verbose_name="Время отправки", blank=True, null=True)
+    send_method = models.CharField(max_length=15, verbose_name="Способ отправки", default="По расписанию")
     status = models.BooleanField(verbose_name="Статус")
-    server_answer = models.TextField(verbose_name="Ответ почтового сервера", blank=True, null=True,)
+    server_answer = models.TextField(verbose_name="Ответ почтового сервера", blank=True, null=True)
 
     def __str__(self):
         return f"{self.send_date}, {self.status}"

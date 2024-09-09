@@ -24,11 +24,11 @@ def check_db():
             send_newsletter(newsletter.newsletter_id)
 
 
-def send_newsletter(newsletter_id):
+def send_newsletter(newsletter_id, send_method):
     """
     Отправляет рассылку
     """
-    send_mails(**newsletter_form(newsletter_id))
+    send_mails(**newsletter_form(newsletter_id, send_method))
     update_newsletter(NewsletterSettings.objects.get(newsletter=newsletter_id))
 
 
@@ -62,15 +62,14 @@ def update_newsletter(newsletter):
     newsletter.save()
 
 
-def newsletter_form(newsletter_id):
+def newsletter_form(newsletter_id, send_method="По расписанию"):
     """
     Формирование параметров для рассылки
     """
     newsletter = Newsletter.objects.get(pk=newsletter_id)
     email_list = [recipient.email for recipient in Client.objects.all()]
     log_data = {"newsletter": newsletter,
-                "send_date": datetime.now().date(),
-                "send_time": datetime.now().time()}
+                "send_method": send_method}
     return {
         "newsletter": newsletter,
         "email_list": email_list,
