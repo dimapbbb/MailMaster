@@ -144,12 +144,25 @@ class NewsletterLogsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "История рассылки"
+        if self.kwargs.get('pk'):
+            context["title"] = "История рассылки"
+        else:
+            context["title"] = "История всех отправлений"
         return context
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(newsletter=self.kwargs.get('pk'))
+        pk = self.kwargs.get('pk')
+
+        if pk:
+            queryset = queryset.filter(newsletter=pk).order_by('-send_date', '-send_time')
+        else:
+            queryset = queryset.all().order_by('-send_date', '-send_time')
+
+            for obj in queryset:
+                newsletter_title = Newsletter.objects.get(id=obj.newsletter_id).title
+                obj.title = newsletter_title
+
         return queryset
 
 
@@ -160,5 +173,5 @@ class ConfirmSend(TemplateView):
         """ Обработка POST запроса"""
         context = super().get_context_data(**kwargs)
         pk = context.get('pk')
-        send_newsletter(pk)
+        send_newsletter(pk, send_method="Ручная отправка")
         return redirect('newsletter:newsletters_list', context)
