@@ -20,24 +20,34 @@
     <div class="col">
         <div class="box">
             {% for object in object_list %}
-
             <a href="{% url 'newsletterapp:newsletter_read' object.pk %}"
                {% if object.status %}
                class="card text-bg-success mb-3"
                {% else %}
                class="card text-bg-danger mb-3"
                {% endif %}>
-
-                <div class="card-body">
-                    <h3 class="card-title">{{ object.title }}</h3>
-                    <h6 class="card-subtitle">Тема: {{ object.topic }}</h6>
-                    <p class="card-text">Сообщение: {{ object.content }}</p>
-                    <p class="card-footer">Последняя отправка: {{ object.last_send_date }}</p>
+                <div class="row g-0">
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ object.title }}</h3>
+                            <h6 class="card-subtitle">Тема: {{ object.topic }}</h6>
+                            <p class="card-text">Сообщение: {{ object.content }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-body">
+                            {% if object.next_send_day %}
+                            <h6 class="card-text text-end">Следующая отправка: {{ object.next_send_day }}</h6>
+                            {% endif %}
+                            {% if object.last_send_date %}
+                            <h6 class="card-text text-end">Последняя отправка: {{ object.last_send_date }}</h6>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </a>
             {% endfor %}
         </div>
-
     </div>
 </div>
 

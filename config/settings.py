@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'newsletterapp',
     'recepients',
     'django_apscheduler',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -100,3 +101,7 @@ EMAIL_HOST_USER = "genadjev.edmund@yandex.ru"
 EMAIL_HOST_PASSWORD = "upoxakalhlxbiqcu"
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
+
+AUTH_USER_MODEL = 'users.Users'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

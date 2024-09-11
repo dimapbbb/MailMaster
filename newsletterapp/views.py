@@ -37,6 +37,8 @@ class NewsletterListView(ListView):
             newsletter = NewsletterSettings.objects.get(newsletter=obj.pk)
             obj.status = newsletter.status
             obj.last_send_date = newsletter.last_send_date
+            obj.next_send_day = newsletter.next_send_day
+            obj.content = obj.content[:100] + " . . ."
         return queryset
 
 
