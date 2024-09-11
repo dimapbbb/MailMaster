@@ -21,7 +21,7 @@ def check_db():
     for newsletter in newsletters:
         if str(newsletter.send_time)[:5] == str(current_date.time())[:5]:
 
-            send_newsletter(newsletter.newsletter_id)
+            send_newsletter(newsletter.newsletter_id, send_method="По расписанию")
 
 
 def send_newsletter(newsletter_id, send_method):

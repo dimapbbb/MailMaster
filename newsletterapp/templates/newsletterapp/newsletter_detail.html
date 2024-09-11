@@ -2,24 +2,29 @@
 
 {% block content %}
 <div class="card">
-    <div class="card-body">
-
-        <h5 class="card-title">{{ object.topic }}</h5>
-        <p class="card-text">{{ object.content }}</p>
-    </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Дата создания: {{ object.created_at }}</li>
-        <li class="list-group-item">Время отправки: {{ object.send_time }}</li>
-        <li class="list-group-item">Следующяя отправка: {{ object.next_send_day }}</li>
-        <li class="list-group-item">Последняя отправка: {{ object.last_send_date }}</li>
-        <li class="list-group-item">Периодичность: {{ object.periodicity }}</li>
-        <li class="list-group-item">Статус: {{ object.status }}</li>
-    </ul>
-    <div class="card-body">
-        <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="card-link">Редактировать</a>
-        <a href="{% url 'newsletterapp:history' object.pk %}" class="card-link">Посмотреть историю</a>
-        <a href="{% url 'newsletterapp:newsletter_delete' object.pk %}" class="card-link">Удалить</a>
-        <a href="{% url 'newsletterapp:confirm_send' object.pk %}" class="card-link">Разослать сейчас</a>
+    <div class="row g-0">
+        <div class="col-md-11">
+            <div class="card-body">
+                <h5 class="card-title">{{ object.topic }}</h5>
+                <p class="card-text">{{ object.content }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Дата создания: {{ object.created_at }}</li>
+                <li class="list-group-item">Время отправки: {{ object.send_time }}</li>
+                <li class="list-group-item">Следующяя отправка: {{ object.next_send_day }}</li>
+                <li class="list-group-item">Последняя отправка: {{ object.last_send_date }}</li>
+                <li class="list-group-item">Периодичность: {{ object.periodicity }}</li>
+                <li class="list-group-item">Статус: {{ object.status }}</li>
+            </ul>
+        </div>
+        <div class="col-md-1">
+            <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+                <a href="{% url 'newsletterapp:newsletter_update' object.pk %}" class="p-2 btn btn-primary mb-3">Редактировать</a>
+                <a href="{% url 'newsletterapp:history' object.pk %}" class="p-2 btn btn-primary mb-3">Посмотреть историю</a>
+                <a href="{% url 'newsletterapp:confirm_send' object.pk %}" class="p-2 btn btn-primary mb-5">Разослать сейчас</a>
+                <a href="{% url 'newsletterapp:newsletter_delete' object.pk %}" class="p-2 btn btn-danger mb-3">Удалить</a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
