@@ -23,3 +23,6 @@ class NewsletterSettingsForm(forms.ModelForm):
 
         self.fields.get('next_send_day').widget.input_type = "date"
         self.fields.get('send_time').widget.input_type = "time"
+        self.fields.get('next_send_day').widget.attrs.update({"min": datetime.now().date(),
+                                                              "required": True})
+        self.fields.get('send_time').widget.attrs.update({"required": True})
