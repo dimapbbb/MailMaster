@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 
 from config import settings
 from users.forms import UserRegisterForm
@@ -26,3 +26,12 @@ class LogoutUserView(TemplateView):
     def post(self, request):
         request.session.delete()
         return redirect('newsletter:home')
+
+
+class UsersDetailView(DetailView):
+    model = Users
+
+    def get_object(self, queryset=None):
+        obj = Users.objects.get(pk=self.kwargs.get('pk'))
+
+        return obj
