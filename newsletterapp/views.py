@@ -50,7 +50,11 @@ class NewsletterCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Новая рассылка"
 
-        NewsletterSettingsFormset = inlineformset_factory(Newsletter, NewsletterSettings, form=NewsletterSettingsForm)
+        NewsletterSettingsFormset = inlineformset_factory(Newsletter,
+                                                          NewsletterSettings,
+                                                          form=NewsletterSettingsForm,
+                                                          can_delete=False)
+
         if self.request.method == "POST":
             context["formset"] = NewsletterSettingsFormset(self.request.POST)
         else:
@@ -79,7 +83,11 @@ class NewsletterUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Редактирование"
 
-        NewsletterSettingsFormset = inlineformset_factory(Newsletter, NewsletterSettings, form=NewsletterSettingsForm)
+        NewsletterSettingsFormset = inlineformset_factory(Newsletter,
+                                                          NewsletterSettings,
+                                                          form=NewsletterSettingsForm,
+                                                          can_delete=False)
+
         if self.request.method == "POST":
             context["formset"] = NewsletterSettingsFormset(self.request.POST, instance=self.object)
         else:
