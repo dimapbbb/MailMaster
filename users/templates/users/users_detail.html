@@ -6,7 +6,7 @@
         <img src="..." class="img-fluid" alt="...">
     </div>
     <div class="col-4">
-        <div class="card mb-3" style="min-height: 440px;">
+        <div class="card mb-3">
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title">Логин: {{ object.username }}</h5>
@@ -32,7 +32,7 @@
 </div>
 
 <div class="btn-group" role="group" aria-label="Basic example">
-    <a class="p-2 btn btn-primary" href="#">Редактировать профиль</a>
+    <a class="p-2 btn btn-primary" href="{% url 'users:users_update' object.pk %}">Редактировать профиль</a>
     <a class="p-2 btn btn-primary" href="#">Сменить пароль</a>
     <a class="p-2 btn btn-primary" href="#">Удалить аккаунт</a>
 </div>

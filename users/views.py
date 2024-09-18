@@ -1,13 +1,9 @@
-import random
-
-from django.contrib.auth.hashers import make_password
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, TemplateView, DetailView
+from django.views.generic import CreateView, TemplateView, DetailView, UpdateView
 
-from config import settings
-from users.forms import UserRegisterForm
+
+from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import Users
 
 
@@ -35,3 +31,12 @@ class UsersDetailView(DetailView):
         obj = Users.objects.get(pk=self.kwargs.get('pk'))
 
         return obj
+
+
+class UsersUpdateView(UpdateView):
+    model = Users
+    form_class = UserUpdateForm
+    template_name = "users/users_update.html"
+
+    def get_success_url(self):
+        return reverse('users:users_detail', args=[self.kwargs.get("pk")])
