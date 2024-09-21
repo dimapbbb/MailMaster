@@ -12,6 +12,11 @@ class ClientListView(ListView):
         context['title'] = "Список получателей"
         return context
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs).filter(user=self.request.user.pk)
+
+        return queryset
+
 
 class ClientCreateView(CreateView):
     model = Client
@@ -22,6 +27,13 @@ class ClientCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Новый получатель"
         return context
+
+    def form_valid(self, form):
+        obj = form.save()
+        obj.user = self.request.user
+        obj.save()
+
+        return super().form_valid(form)
 
 
 class ClientUpdateView(UpdateView):
