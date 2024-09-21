@@ -1,7 +1,6 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, TemplateView, DetailView, UpdateView
-
+from django.views.generic import CreateView, TemplateView, DetailView, UpdateView, DeleteView
 
 from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import Users
@@ -40,3 +39,14 @@ class UsersUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('users:users_detail', args=[self.kwargs.get("pk")])
+
+
+class UsersDeleteView(TemplateView):
+    model = Users
+    template_name = "users/users_confirm_delete.html"
+
+    def post(self, request, pk):
+        user = request.user
+        user.is_active = False
+        user.save()
+        return redirect('newsletter:home')

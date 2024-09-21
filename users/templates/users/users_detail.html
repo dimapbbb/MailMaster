@@ -33,8 +33,7 @@
 
 <div class="btn-group" role="group" aria-label="Basic example">
     <a class="p-2 btn btn-primary" href="{% url 'users:users_update' object.pk %}">Редактировать профиль</a>
-    <a class="p-2 btn btn-primary" href="#">Сменить пароль</a>
-    <a class="p-2 btn btn-primary" href="#">Удалить аккаунт</a>
+    <a class="p-2 btn btn-danger" href="{% url 'users:users_delete' object.pk %}">Удалить аккаунт</a>
 </div>
 
 {% endblock %}
