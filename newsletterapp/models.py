@@ -1,7 +1,10 @@
 from django.db import models
 
+from users.models import Users
+
 
 class Newsletter(models.Model):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="user", default=3)
 
     title = models.CharField(max_length=50, verbose_name="Заголовок")
     topic = models.CharField(max_length=200, verbose_name="Тема рассылки")

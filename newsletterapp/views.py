@@ -25,7 +25,7 @@ class NewsletterListView(ListView):
         return context
 
     def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs)
+        queryset = super().get_queryset(*args, **kwargs).filter(user=self.request.user.pk)
 
         state = self.kwargs.get('state')
         if state == 'activ':
@@ -64,6 +64,8 @@ class NewsletterCreateView(CreateView):
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
         self.object = form.save()
+        self.object.user = self.request.user
+        self.object.save()
 
         if formset.is_valid():
             formset.instance = self.object
