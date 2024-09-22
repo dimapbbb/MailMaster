@@ -9,5 +9,5 @@ class Users(AbstractUser):
         return f"{self.username}, {self.first_name} {self.last_name}"
 
     class Meta:
-        verbose_name = ""
-        verbose_name_plural = ""
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
