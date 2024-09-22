@@ -8,9 +8,8 @@
     <nav class="col-6">
         {% if user.is_authenticated %}
         <div class="btn-group" role="group" align="right">
-            <a class="p-2 btn btn-outline-primary" href="{% url 'newsletterapp:newsletters_list' 'all' %}">Мои
-                рассылки</a>
-            <a class="p-2 btn btn-outline-primary" href="/clients/">Мои получатели</a>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'newsletterapp:newsletters_list' 'all' %}">Рассылки</a>
+            <a class="p-2 btn btn-outline-primary" href="/clients/">Получатели</a>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
                         aria-expanded="false">

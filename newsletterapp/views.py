@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
@@ -25,7 +25,10 @@ class NewsletterListView(ListView):
         return context
 
     def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs).filter(user=self.request.user.pk)
+        queryset = super().get_queryset(*args, **kwargs)
+
+        if not self.request.user.is_manager():
+            queryset = queryset.filter(user=self.request.user.pk)
 
         state = self.kwargs.get('state')
         if state == 'activ':
@@ -34,10 +37,10 @@ class NewsletterListView(ListView):
             queryset = queryset.filter(newslettersettings__status=False)
 
         for obj in queryset:
-            newsletter = NewsletterSettings.objects.get(newsletter=obj.pk)
-            obj.status = newsletter.status
-            obj.last_send_date = newsletter.last_send_date
-            obj.next_send_day = newsletter.next_send_day
+            settings = NewsletterSettings.objects.get(newsletter=obj.pk)
+            obj.status = settings.status
+            obj.last_send_date = settings.last_send_date
+            obj.next_send_day = settings.next_send_day
             obj.content = obj.content[:100] + " . . ."
         return queryset
 
@@ -125,15 +128,16 @@ class NewsletterDetailView(DetailView):
 
         if settings.periodicity:
             self.object.periodicity = f"Раз в {settings.periodicity} дней"
-
         else:
             self.object.periodicity = "Отключена"
 
-        if settings.status:
-            self.object.status = "Активная"
-        else:
-            self.object.status = "Не активная"
-            self.object.next_send_day = "Отключена"
+        self.object.status = settings.status
+
+        # if settings.status:
+        #     self.object.status = "Активная"
+        # else:
+        #     self.object.status = "Не активная"
+        #     self.object.next_send_day = "Отключена"
 
         self.object.save()
         return self.object
@@ -142,6 +146,18 @@ class NewsletterDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["title"] = kwargs.get('object').title
         return context
+
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk')
+        settings = NewsletterSettings.objects.get(newsletter_id=pk)
+
+        if settings.status:
+            settings.status = False
+        else:
+            settings.status = True
+        settings.save()
+
+        return redirect('newsletter:newsletter_read', pk=pk)
 
 
 class NewsletterDeleteView(DeleteView):
@@ -187,3 +203,20 @@ class ConfirmSend(TemplateView):
         pk = context.get('pk')
         send_newsletter(pk, send_method="Ручная отправка")
         return redirect('newsletter:newsletters_list', context)
+
+
+class ConfirmBlockUser(TemplateView):
+    template_name = 'users/confirm_block.html'
+
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk')
+        newsletter = Newsletter.objects.get(id=pk)
+        user = newsletter.user
+
+        if user.is_active:
+            user.is_active = False
+        else:
+            user.is_active = True
+        user.save()
+
+        return redirect('newsletter:newsletter_read', pk=pk)

@@ -8,6 +8,16 @@ class Users(AbstractUser):
     def __str__(self):
         return f"{self.username}, {self.first_name} {self.last_name}"
 
+    def is_manager(self):
+        if self.groups.filter(name="manager").exists():
+            return True
+        return False
+
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+        permissions = [
+            ('can_view_users', 'view_users_list'),
+            ('can_block_user', 'block or unblock user')
+        ]
