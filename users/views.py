@@ -1,5 +1,6 @@
+from django.contrib.auth.models import AnonymousUser
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, DetailView, UpdateView
 from django.contrib.auth.mixins import AccessMixin
@@ -9,6 +10,18 @@ from newsletterapp.models import Newsletter, NewsletterSettings
 from recepients.models import Client
 from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import Users
+
+
+class UserAccessMixin(AccessMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        owner_data = Users.objects.get(id=kwargs.get('pk'))
+        if request.user == AnonymousUser():
+            return render(request, 'newsletterapp/home.html')
+        elif request.user != owner_data:
+            return render(request, 'error_message.html')
+        else:
+            return super().dispatch(request, *args, **kwargs)
 
 
 class ManagerRequiredMixin(AccessMixin):
@@ -46,7 +59,7 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 
-class ConfirmEmailView(TemplateView):
+class ConfirmEmailView(UserAccessMixin, TemplateView):
     template_name = 'users/confirm_email.html'
 
     def get(self, request, *args, **kwargs):
@@ -68,7 +81,7 @@ class LogoutUserView(TemplateView):
         return redirect('newsletter:home')
 
 
-class UsersDetailView(DetailView):
+class UsersDetailView(UserAccessMixin, DetailView):
     model = Users
 
     def get_object(self, queryset=None):
@@ -87,7 +100,7 @@ class UsersDetailView(DetailView):
         return obj
 
 
-class UsersUpdateView(UpdateView):
+class UsersUpdateView(UserAccessMixin, UpdateView):
     model = Users
     form_class = UserUpdateForm
     template_name = "users/users_update.html"
@@ -96,7 +109,7 @@ class UsersUpdateView(UpdateView):
         return reverse('users:users_detail', args=[self.kwargs.get("pk")])
 
 
-class UsersDeleteView(TemplateView):
+class UsersDeleteView(UserAccessMixin, TemplateView):
     model = Users
     template_name = "users/users_confirm_delete.html"
 
