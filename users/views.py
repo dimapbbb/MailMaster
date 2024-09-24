@@ -5,7 +5,8 @@ from django.views.generic import CreateView, TemplateView, DetailView, UpdateVie
 from django.contrib.auth.mixins import AccessMixin
 
 from config import settings
-from newsletterapp.models import Newsletter
+from newsletterapp.models import Newsletter, NewsletterSettings
+from recepients.models import Client
 from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import Users
 
@@ -71,7 +72,17 @@ class UsersDetailView(DetailView):
     model = Users
 
     def get_object(self, queryset=None):
-        obj = Users.objects.get(pk=self.kwargs.get('pk'))
+        pk = self.kwargs.get('pk')
+        obj = Users.objects.get(pk=pk)
+
+        newsletters = NewsletterSettings.objects.filter(newsletter__user_id=pk)
+        active_newsletters_count = newsletters.filter(status=True).count()
+        newsletters_count = newsletters.count()
+        clients_count = Client.objects.filter(user_id=pk).count()
+
+        obj.newsletters_count = newsletters_count
+        obj.active_newsletters_count = active_newsletters_count
+        obj.clients_count = clients_count
 
         return obj
 
