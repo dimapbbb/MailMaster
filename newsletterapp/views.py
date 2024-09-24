@@ -1,7 +1,9 @@
+from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
+from django.contrib.auth.mixins import AccessMixin
 
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
 from newsletterapp.models import Newsletter, NewsletterSettings, NewsletterLogs
@@ -14,6 +16,20 @@ def home(request):
         "description": "это отличный вариант для доставки важной информации по электронной почте"
     }
     return render(request, 'newsletterapp/home.html', context)
+
+
+class UserAccessMixin(AccessMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        owner_data = Newsletter.objects.get(id=kwargs.get('pk')).user
+        if request.user == AnonymousUser():
+            return render(request, 'newsletterapp/home.html')
+        elif request.user.is_manager():
+            return super().dispatch(request, *args, **kwargs)
+        elif request.user != owner_data:
+            return render(request, 'error_message.html')
+        else:
+            return super().dispatch(request, *args, **kwargs)
 
 
 class NewsletterListView(ListView):
@@ -80,7 +96,7 @@ class NewsletterCreateView(CreateView):
         return reverse('newsletter:newsletters_list', args=['all'])
 
 
-class NewsletterUpdateView(UpdateView):
+class NewsletterUpdateView(UserAccessMixin, UpdateView):
     model = Newsletter
     form_class = NewsletterForm
 
@@ -112,35 +128,29 @@ class NewsletterUpdateView(UpdateView):
         return reverse('newsletter:newsletter_read', args=[self.kwargs.get('pk')])
 
 
-class NewsletterDetailView(DetailView):
+class NewsletterDetailView(UserAccessMixin, DetailView):
     model = Newsletter
 
     def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
+        obj = super().get_object(queryset)
         newsletter_id = self.kwargs.get('pk')
         settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
 
-        self.object.last_send_date = settings.last_send_date
+        obj.last_send_date = settings.last_send_date
 
-        self.object.send_time = settings.send_time
+        obj.send_time = settings.send_time
 
-        self.object.next_send_day = settings.next_send_day
+        obj.next_send_day = settings.next_send_day
 
         if settings.periodicity:
-            self.object.periodicity = f"Раз в {settings.periodicity} дней"
+            obj.periodicity = f"Раз в {settings.periodicity} дней"
         else:
-            self.object.periodicity = "Отключена"
+            obj.periodicity = "Отключена"
 
-        self.object.status = settings.status
+        obj.status = settings.status
 
-        # if settings.status:
-        #     self.object.status = "Активная"
-        # else:
-        #     self.object.status = "Не активная"
-        #     self.object.next_send_day = "Отключена"
-
-        self.object.save()
-        return self.object
+        obj.save()
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -160,7 +170,7 @@ class NewsletterDetailView(DetailView):
         return redirect('newsletter:newsletter_read', pk=pk)
 
 
-class NewsletterDeleteView(DeleteView):
+class NewsletterDeleteView(UserAccessMixin, DeleteView):
     model = Newsletter
 
     def get_success_url(self):
@@ -194,7 +204,7 @@ class NewsletterLogsListView(ListView):
         return queryset
 
 
-class ConfirmSend(TemplateView):
+class ConfirmSend(UserAccessMixin, TemplateView):
     template_name = "newsletterapp/confirm_send.html"
 
     def post(self, request, **kwargs):

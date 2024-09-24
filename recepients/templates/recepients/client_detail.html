@@ -13,8 +13,10 @@
         <li class="list-group-item">A third item</li>
     </ul>
     <div class="card-body">
+        {% if not user.is_manager %}
         <a href="{% url 'recipients:update_client' object.pk %}" class="card-link">Редактировать</a>
         <a href="{% url 'recipients:delete_client' object.pk %}" class="card-link">Удалить</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
