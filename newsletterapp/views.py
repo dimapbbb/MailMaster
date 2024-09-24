@@ -203,20 +203,3 @@ class ConfirmSend(TemplateView):
         pk = context.get('pk')
         send_newsletter(pk, send_method="Ручная отправка")
         return redirect('newsletter:newsletters_list', context)
-
-
-class ConfirmBlockUser(TemplateView):
-    template_name = 'users/confirm_block.html'
-
-    def post(self, *args, **kwargs):
-        pk = kwargs.get('pk')
-        newsletter = Newsletter.objects.get(id=pk)
-        user = newsletter.user
-
-        if user.is_active:
-            user.is_active = False
-        else:
-            user.is_active = True
-        user.save()
-
-        return redirect('newsletter:newsletter_read', pk=pk)

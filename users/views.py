@@ -2,10 +2,21 @@ from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, DetailView, UpdateView
+from django.contrib.auth.mixins import AccessMixin
 
 from config import settings
+from newsletterapp.models import Newsletter
 from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import Users
+
+
+class ManagerRequiredMixin(AccessMixin):
+    """Verify that the current user is Manager."""
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_manager():
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 
 class RegisterView(CreateView):
@@ -84,3 +95,20 @@ class UsersDeleteView(TemplateView):
         user.is_active = False
         user.save()
         return redirect('newsletter:home')
+
+
+class UsersBlockView(ManagerRequiredMixin, TemplateView):
+    template_name = 'users/confirm_block.html'
+
+    def post(self, *args, **kwargs):
+        pk = kwargs.get('pk')
+        newsletter = Newsletter.objects.get(id=pk)
+        user = newsletter.user
+
+        if user.is_active:
+            user.is_active = False
+        else:
+            user.is_active = True
+        user.save()
+
+        return redirect('newsletter:newsletter_read', pk=pk)
