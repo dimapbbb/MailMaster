@@ -4,6 +4,11 @@ from users.models import Users
 
 
 class BlogPost(models.Model):
+    choices = [
+        (True, 'Опубликовано'),
+        (False, 'Не опубликовано'),
+        ('Work', 'На проверке менеджера')
+    ]
     user = models.ForeignKey(Users, on_delete=models.SET_DEFAULT, default=1)
 
     title = models.CharField(max_length=100, verbose_name="Заголовок")
@@ -12,7 +17,7 @@ class BlogPost(models.Model):
 
     created_at = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
     published_date = models.DateField(verbose_name="Дата публикации", blank=True, null=True)
-    published_sign = models.BooleanField(default=False, verbose_name="Знак публикации")
+    published_sign = models.CharField(choices=choices, default=False, verbose_name="Знак публикации")
 
     views_count = models.PositiveIntegerField(default=0, verbose_name="Просмотры")
     likes_count = models.PositiveIntegerField(default=0, verbose_name="Лайки")

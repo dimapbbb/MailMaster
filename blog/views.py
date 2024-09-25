@@ -1,8 +1,23 @@
+from django.contrib.auth.mixins import AccessMixin
+from django.contrib.auth.models import AnonymousUser
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView, TemplateView
 
 from blog.forms import PostForm
 from blog.models import BlogPost
+
+
+class UserAccessMixin(AccessMixin):
+
+    def dispatch(self, request, *args, **kwargs):
+        owner_data = BlogPost.objects.get(id=kwargs.get('pk')).user
+        if request.user == AnonymousUser():
+            return render(request, 'newsletterapp/home.html')
+        elif request.user != owner_data:
+            return render(request, 'error_message.html')
+        else:
+            return super().dispatch(request, *args, **kwargs)
 
 
 class BlogListView(ListView):
@@ -12,6 +27,11 @@ class BlogListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = "Мой блог"
         return context
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(user=self.request.user.pk)
+        return queryset
 
 
 class PostCreateView(CreateView):
@@ -34,7 +54,7 @@ class PostCreateView(CreateView):
         return reverse('blog:all_posts')
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(UserAccessMixin, UpdateView):
     model = BlogPost
     form_class = PostForm
 
@@ -42,7 +62,7 @@ class PostUpdateView(UpdateView):
         return reverse('blog:read_post', args=[self.kwargs.get('pk')])
 
 
-class ReadPostView(DetailView):
+class ReadPostView(UserAccessMixin, DetailView):
     model = BlogPost
 
     def get_context_data(self, **kwargs):
@@ -50,8 +70,17 @@ class ReadPostView(DetailView):
         context['title'] = kwargs.get('object').title
         return context
 
+    def post(self, *args, **kwargs):
+        blogpost = BlogPost.objects.get(id=kwargs.get('pk'))
+        if blogpost.published_sign:
+            blogpost.published_sign = False
+        else:
+            blogpost.published_sign = True
+        blogpost.save()
+        return redirect('blog:read_post', pk=kwargs.get('pk'))
 
-class PostDeleteView(DeleteView):
+
+class PostDeleteView(UserAccessMixin, DeleteView):
     model = BlogPost
 
     def get_success_url(self):

@@ -13,6 +13,11 @@ class Users(AbstractUser):
             return True
         return False
 
+    def is_content_manager(self):
+        if self.groups.filter(name="content_manager").exists():
+            return True
+        return False
+
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
