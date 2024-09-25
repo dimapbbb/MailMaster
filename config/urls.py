@@ -9,4 +9,5 @@ urlpatterns = [
     path('', include('newsletterapp.urls', namespace='newsletter')),
     path('', include('recepients.urls', namespace='recipients')),
     path('', include('users.urls', namespace='users')),
+    path('', include('blog.urls', namespace='blog')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
