@@ -8,7 +8,7 @@ class BlogPost(models.Model):
 
     title = models.CharField(max_length=100, verbose_name="Заголовок")
     content = models.TextField(verbose_name="Содержимое")
-    image = models.ImageField(upload_to='blog_image/', verbose_name="Картинка")
+    image = models.ImageField(upload_to='blog_image/', verbose_name="Картинка", blank=True, null=True)
     published_date = models.DateField(auto_now=True, verbose_name="Дата публикации")
     views_count = models.IntegerField(default=0, verbose_name="Просмотры")
 

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4 mb-3">
+        <a class="p-2 btn btn-outline-primary" href="/new_post/">Новая публикация</a>
+    </div>
+</div>
+{% for object in object_list %}
+<a href="{% url 'blog:read_post' object.pk %}">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">{{ object.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ object.published_date }}</h6>
+            <p class="card-text">{{ object.content }}</p>
+            <a href="#" class="card-link">Опубликовать</a>
+        </div>
+    </div>
+</a>
+{% endfor %}
+{% endblock %}

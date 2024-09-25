@@ -2,7 +2,7 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Меню</h5>
     <nav class="col-8 ms-5">
         <a class="p-2 btn btn-outline-primary" href="/">Главная</a>
-        <a class="p-2 btn btn-outline-primary" href="/">Блог</a>
+        <a class="p-2 btn btn-outline-primary" href="/blog/">Блог</a>
     </nav>
 
     <nav class="col-6">
@@ -17,6 +17,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'users:users_detail' user.pk %}">Мой аккаунт</a></li>
+                    <li><a class="dropdown-item" href="{% url 'blog:all_posts' %}">Мой блог</a></li>
                     <li><a class="dropdown-item" href="{% url 'newsletter:history' 0 %}">История отправлений</a></li>
                     <li><a class="dropdown-item" href="/logout/">Выйти</a></li>
                 </ul>
