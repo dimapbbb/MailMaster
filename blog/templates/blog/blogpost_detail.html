@@ -1,20 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="card">
-    <div class="card-body">
-
-        <h5 class="card-title">{{ object.title }}</h5>
-        <p class="card-text">{{ object.content }}</p>
+<div class="row">
+    <div class="col-9">
+        <div class="btn-group" role="group" aria-label="Vertical button group">
+            <a href="{% url 'blog:update_post' object.pk %}"
+               class="p-2 btn btn-primary mb-3">Редактировать</a>
+            <a href="#" class="p-2 btn btn-success mb-3">Опубликовать</a>
+        </div>
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">{{ object.published_date }}</li>
-        <li class="list-group-item">A second item</li>
-        <li class="list-group-item">A third item</li>
-    </ul>
-    <div class="card-body">
-        <a href="{% url 'blog:update_post' object.pk %}" class="card-link">Редактировать</a>
-        <a href="{% url 'blog:delete_post' object.pk %}" class="card-link">Удалить</a>
+    <div class="col-3" align="right">
+        <a href="{% url 'blog:delete_post' object.pk %}" class="p-2 btn btn-danger mb-3">Удалить</a>
+    </div>
+</div>
+<div class="card">
+    <div class="row g-0">
+        <div class="cok-mb-3">
+            <img src="..." class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-6">
+            <div class="card-body">
+                <p class="card-text">{{ object.content }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Дата создания: {{ object.created_at }}</li>
+                <li class="list-group-item">Дата публикации: {{ object.published_date }}</li>
+                <li class="list-group-item">Просмотры: {{ object.views_count }}</li>
+                <li class="list-group-item">Лайки: {{ object.likes_count }}</li>
+            </ul>
+
+        </div>
     </div>
 </div>
 {% endblock %}

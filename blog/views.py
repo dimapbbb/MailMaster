@@ -45,6 +45,11 @@ class PostUpdateView(UpdateView):
 class ReadPostView(DetailView):
     model = BlogPost
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = kwargs.get('object').title
+        return context
+
 
 class PostDeleteView(DeleteView):
     model = BlogPost
