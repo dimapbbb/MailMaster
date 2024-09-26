@@ -5,6 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, DetailView, UpdateView
 from django.contrib.auth.mixins import AccessMixin
 
+from blog.models import BlogPost
 from config import settings
 from newsletterapp.models import Newsletter, NewsletterSettings
 from recepients.models import Client
@@ -88,14 +89,21 @@ class UsersDetailView(UserAccessMixin, DetailView):
         pk = self.kwargs.get('pk')
         obj = Users.objects.get(pk=pk)
 
-        newsletters = NewsletterSettings.objects.filter(newsletter__user_id=pk)
-        active_newsletters_count = newsletters.filter(status=True).count()
+        newsletters = Newsletter.objects.filter(user_id=pk)
+        active_newsletters_count = newsletters.filter(newslettersettings__status=True).count()
         newsletters_count = newsletters.count()
         clients_count = Client.objects.filter(user_id=pk).count()
+
+        public_posts = BlogPost.objects.filter(user_id=pk, published_sign=True)
+        all_views_count = sum([post.views_count for post in public_posts])
+        all_likes_count = sum([post.likes_count for post in public_posts])
 
         obj.newsletters_count = newsletters_count
         obj.active_newsletters_count = active_newsletters_count
         obj.clients_count = clients_count
+        obj.public_posts_count = public_posts.count()
+        obj.views_count = all_views_count
+        obj.likes_count = all_likes_count
 
         return obj
 
