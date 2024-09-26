@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4">
+        <img src="..." class="img-fluid" alt="...">
+    </div>
+    <div class="col-4">
+        <div class="card mb-3">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Логин: {{ object.username }}</h5>
+                    <h6 class="card-subtitle mb-5">Почта: {{ object.email }}</h6>
+                    <p class="card-text">Имя: {{ object.get_full_name }}</p>
+                    <p class="card-text">Дата регистрации: {{ object.date_joined }}</p>
+                    <p class="card-text">Дата последнего входа: {{ object.last_login }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card mb-3" style="min-height: 440px;">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <p class="card-text">Всего расылок: {{ object.newsletters_count }}</p>
+                    <p class="card-text">Активные: {{ object.active_newsletters_count }}</p>
+                    <p class="card-text">Получатели: {{ object.clients_count }}</p>
+                    <p class="card-text">Опубликовано постов: {{ object.public_posts_count }}</p>
+                    <p class="card-text">Всего просмотров: {{ object.views_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="btn-group" role="group" aria-label="Basic example">
+    <a class="p-2 btn btn-primary" href="{% url 'users:users_update' object.pk %}">Редактировать профиль</a>
+    <a class="p-2 btn btn-danger" href="{% url 'users:users_delete' object.pk %}">Удалить аккаунт</a>
+</div>
+
+{% endblock %}

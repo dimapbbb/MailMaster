@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-9">
+        <div class="btn-group" role="group" aria-label="Vertical button group">
+            {% if object.published_sign == 'work' %}
+            <a href="#" class="p-2 btn btn-warning mb-3">На проверке</a>
+            {% elif object.published_sign == 'no_pub' %}
+            <a href="{% url 'blog:update_post' object.pk %}" class="p-2 btn btn-primary mb-3">Редактировать</a>
+            <a href="{% url 'blog:confirm_publication' object.pk %}" class="p-2 btn btn-success mb-3">Опубликовать</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-3" align="right">
+        {% if object.published_sign == 'no_pub' %}
+        <a href="{% url 'blog:delete_post' object.pk %}" class="p-2 btn btn-danger mb-3">Удалить</a>
+        {% endif %}
+    </div>
+</div>
+<div class="card">
+    <div class="row g-0">
+        <div class="cok-mb-3">
+            <img src="..." class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-6">
+            <div class="card-body">
+                <p class="card-text">{{ object.content }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Дата создания: {{ object.created_at }}</li>
+                <li class="list-group-item">Дата публикации: {{ object.published_date }}</li>
+                <li class="list-group-item">Просмотры: {{ object.views_count }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

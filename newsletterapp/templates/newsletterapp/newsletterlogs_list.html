@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row mb-5">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Статус</th>
+            <th scope="col">Заголовок</th>
+            <th scope="col">Способ отправки</th>
+            <th scope="col">Дата отправки</th>
+            <th scope="col">Время отправки</th>
+            <th scope="col">Ответ почтового сервера</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+        <tr>
+            <th scope="row">{{ object.status }}</th>
+            <th scope="row">{{ object.title }}</th>
+            <td>{{ object.send_method }}</td>
+            <td>{{ object.send_date }}</td>
+            <td>{{ object.send_time }}</td>
+            <td>@{{ object.server_answer }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

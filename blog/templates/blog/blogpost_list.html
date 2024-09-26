@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4 mb-3">
+        <a class="p-2 btn btn-outline-primary" href="/new_post/">Новая публикация</a>
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for object in object_list %}
+    <div class="col">
+        <a href="{% url 'blog:read_post' object.pk %}"
+        {% if object.published_sign == "pub" %}
+        class="card text-bg-info mb-3"
+        {% elif object.published_sign == "no_pub" %}
+        class='card text-bg-secondary mb-3'
+        {% elif object.published_sign == 'work' %}
+        class="card text-bg-warning mb-3"
+        {% endif %}>
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ object.title }}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Просмотры: {{ object.views_count }}</li>
+        </ul>
+        </a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
