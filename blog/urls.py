@@ -7,7 +7,7 @@ from blog.views import (UserBlogListView,
                         PostDeleteView,
                         PostUpdateView,
                         ConfirmPublicationView,
-                        BlogListView, ContentManagerBlogView)
+                        BlogListView)
 
 app_name = BlogConfig.name
 
@@ -19,5 +19,4 @@ urlpatterns = [
     path('read_post/<int:pk>', ReadPostView.as_view(), name='read_post'),
     path('delete_post/<int:pk>', PostDeleteView.as_view(), name='delete_post'),
     path('confirm_publication/<int:pk>', ConfirmPublicationView.as_view(), name='confirm_publication'),
-    path('manager_work', ContentManagerBlogView.as_view(), name='content_manager'),
 ]

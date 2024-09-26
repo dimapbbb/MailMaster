@@ -96,14 +96,12 @@ class UsersDetailView(UserAccessMixin, DetailView):
 
         public_posts = BlogPost.objects.filter(user_id=pk, published_sign=True)
         all_views_count = sum([post.views_count for post in public_posts])
-        all_likes_count = sum([post.likes_count for post in public_posts])
 
         obj.newsletters_count = newsletters_count
         obj.active_newsletters_count = active_newsletters_count
         obj.clients_count = clients_count
         obj.public_posts_count = public_posts.count()
         obj.views_count = all_views_count
-        obj.likes_count = all_likes_count
 
         return obj
 

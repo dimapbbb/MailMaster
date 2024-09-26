@@ -7,9 +7,6 @@
     <nav class="col-8">
         {% if user.is_authenticated %}
         <div class="btn-group" role="group" align="right">
-            {% if user.is_content_manager %}
-            <a class="p-2 btn btn-outline-primary" href="{% url 'blog:content_manager' %}">Управление блогом</a>
-            {% endif %}
             <a class="p-2 btn btn-outline-primary" href="{% url 'newsletterapp:newsletters_list' 'all' %}">Рассылки</a>
             <a class="p-2 btn btn-outline-primary" href="/clients/">Получатели</a>
             <div class="btn-group" role="group">

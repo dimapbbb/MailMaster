@@ -5,9 +5,9 @@ from users.models import Users
 
 class BlogPost(models.Model):
     choices = [
-        (True, 'Опубликовано'),
-        (False, 'Не опубликовано'),
-        ('Work', 'На проверке менеджера')
+        ('pub', 'Опубликовано'),
+        ('no_pub', 'Не опубликовано'),
+        ('work', 'На проверке менеджера')
     ]
     user = models.ForeignKey(Users, on_delete=models.SET_DEFAULT, default=1)
 
@@ -20,7 +20,6 @@ class BlogPost(models.Model):
     published_sign = models.CharField(choices=choices, default=False, verbose_name="Знак публикации")
 
     views_count = models.PositiveIntegerField(default=0, verbose_name="Просмотры")
-    likes_count = models.PositiveIntegerField(default=0, verbose_name="Лайки")
 
     def __str__(self):
         return f"{self.title} ({self.user})"
