@@ -3,6 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
+from recepients.forms import ClientForm
 
 from recepients.models import Client
 
@@ -37,7 +38,7 @@ class ClientListView(ListView):
 
 class ClientCreateView(CreateView):
     model = Client
-    fields = ('last_name', 'first_name', 'sur_name', 'email', 'comment')
+    form_class = ClientForm
     success_url = reverse_lazy('recipients:clients')
 
     def get_context_data(self, **kwargs):
@@ -55,7 +56,7 @@ class ClientCreateView(CreateView):
 
 class ClientUpdateView(UserAccessMixin, UpdateView):
     model = Client
-    fields = ('last_name', 'first_name', 'sur_name', 'email', 'comment')
+    form_class = ClientForm
 
     def get_success_url(self):
         return reverse('recipients:client_detail', args=[self.kwargs.get('pk')])

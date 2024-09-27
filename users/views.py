@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import AccessMixin
 
 from blog.models import BlogPost
 from config import settings
-from newsletterapp.models import Newsletter, NewsletterSettings
+from newsletterapp.models import Newsletter
 from recepients.models import Client
 from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import Users

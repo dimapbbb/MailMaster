@@ -1,13 +1,11 @@
-from random import choices, sample
+from random import sample
 
-from config.settings import CACHE_ENABLED
 from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from django.contrib.auth.mixins import AccessMixin
-from django.core.cache import cache
 
 from blog.models import BlogPost
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
@@ -25,6 +23,7 @@ class HomeView(TemplateView):
         newsletters = get_cache_data(key='newsletters', model=Newsletter)
         all_posts = get_cache_data(key='all_posts', model=BlogPost)
 
+        all_posts = all_posts.filter(published_sign='pub')
         random_posts = sample(list(all_posts), k=3)
 
         context = super().get_context_data(**kwargs)
@@ -101,12 +100,12 @@ class NewsletterCreateView(CreateView):
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
-        self.object = form.save()
+        self.object = form.save(commit=False)
         self.object.user = self.request.user
-        self.object.save()
 
         if formset.is_valid():
             formset.instance = self.object
+            self.object.save()
             formset.save()
 
         return super().form_valid(form)
@@ -156,9 +155,7 @@ class NewsletterDetailView(UserAccessMixin, DetailView):
         settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
 
         obj.last_send_date = settings.last_send_date
-
         obj.send_time = settings.send_time
-
         obj.next_send_day = settings.next_send_day
 
         if settings.periodicity:
