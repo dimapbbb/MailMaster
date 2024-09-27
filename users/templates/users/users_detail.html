@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-4">
-        <img src="..." class="img-fluid" alt="...">
+        <img src="/media/{{ object.photo }}" class="img-fluid" alt="...">
     </div>
     <div class="col-4">
         <div class="card mb-3">
@@ -25,6 +25,7 @@
                     <p class="card-text">Всего расылок: {{ object.newsletters_count }}</p>
                     <p class="card-text">Активные: {{ object.active_newsletters_count }}</p>
                     <p class="card-text">Получатели: {{ object.clients_count }}</p>
+                    <p class="card-text">Сохранено постов: {{ object.all_posts_count }}</p>
                     <p class="card-text">Опубликовано постов: {{ object.public_posts_count }}</p>
                     <p class="card-text">Всего просмотров: {{ object.views_count }}</p>
                 </div>

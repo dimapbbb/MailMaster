@@ -1,21 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% for object in object_list %}
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    <div class="col">
-        <a href="{% url 'blog:read_post' object.pk %}" class="card text-bg-info mb-3">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">{{ object.title }}</h5>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Просмотры: {{ object.views_count }}</li>
-                    <li class="list-group-item">{{ object.user }}</li>
-                </ul>
-
-        </a>
+<div class="card-group">
+    {% for object in object_list %}
+    <div class="card">
+        <img src="/media/{{ object.image }}" class="card-img-top" alt="Не загруженная картинка">
+        <div class="card-body">
+            <h5 class="card-title">{{ object.title }}</h5>
+            <p class="card-text"><small class="text-body-secondary">Просмотры: {{ object.views_count }}</small></p>
+        </div>
     </div>
+    {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}
