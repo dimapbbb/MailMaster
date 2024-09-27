@@ -5,14 +5,21 @@ from django import forms
 from newsletterapp.models import Newsletter, NewsletterSettings
 
 
-class NewsletterForm(forms.ModelForm):
+class StyleFormMixin(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+
+class NewsletterForm(StyleFormMixin, forms.ModelForm):
 
     class Meta:
         model = Newsletter
         fields = ('title', 'topic', 'content')
 
 
-class NewsletterSettingsForm(forms.ModelForm):
+class NewsletterSettingsForm(StyleFormMixin, forms.ModelForm):
 
     class Meta:
         model = NewsletterSettings
@@ -26,6 +33,7 @@ class NewsletterSettingsForm(forms.ModelForm):
         self.fields.get('next_send_day').widget.attrs.update({"min": datetime.now().date(),
                                                               "required": True})
         self.fields.get('send_time').widget.attrs.update({"required": True})
+        self.fields.get('status').widget.attrs['class'] = 'checkbox'
 
     def clean(self):
         day = self.cleaned_data.get('next_send_day')

@@ -25,6 +25,7 @@ class HomeView(TemplateView):
         newsletters = get_cache_data(key='newsletters', model=Newsletter)
         all_posts = get_cache_data(key='all_posts', model=BlogPost)
 
+        all_posts = all_posts.filter(published_sign='pub')
         random_posts = sample(list(all_posts), k=3)
 
         context = super().get_context_data(**kwargs)
@@ -156,9 +157,7 @@ class NewsletterDetailView(UserAccessMixin, DetailView):
         settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
 
         obj.last_send_date = settings.last_send_date
-
         obj.send_time = settings.send_time
-
         obj.next_send_day = settings.next_send_day
 
         if settings.periodicity:
