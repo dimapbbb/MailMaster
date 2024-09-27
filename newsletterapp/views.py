@@ -1,4 +1,4 @@
-from random import choices
+from random import choices, sample
 
 from config.settings import CACHE_ENABLED
 from django.contrib.auth.models import AnonymousUser
@@ -25,7 +25,7 @@ class HomeView(TemplateView):
         newsletters = get_cache_data(key='newsletters', model=Newsletter)
         all_posts = get_cache_data(key='all_posts', model=BlogPost)
 
-        random_posts = choices(all_posts, k=3)
+        random_posts = sample(list(all_posts), k=3)
 
         context = super().get_context_data(**kwargs)
         context['title'] = "Мастер рассылок"
