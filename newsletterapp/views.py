@@ -1,15 +1,18 @@
 from random import choices
 
+from config.settings import CACHE_ENABLED
 from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from django.contrib.auth.mixins import AccessMixin
+from django.core.cache import cache
 
 from blog.models import BlogPost
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
 from newsletterapp.models import Newsletter, NewsletterSettings, NewsletterLogs
+from newsletterapp.services import get_cache_data
 from newsletterapp.utils import send_newsletter
 from recepients.models import Client
 
@@ -18,17 +21,17 @@ class HomeView(TemplateView):
     template_name = 'newsletterapp/home.html'
 
     def get_context_data(self, **kwargs):
-        clients = Client.objects.all()
-        newsletters = Newsletter.objects.all()
-        all_posts = BlogPost.objects.all()
+        clients = get_cache_data(key='clients', model=Client)
+        newsletters = get_cache_data(key='newsletters', model=Newsletter)
+        all_posts = get_cache_data(key='all_posts', model=BlogPost)
+
         random_posts = choices(all_posts, k=3)
 
         context = super().get_context_data(**kwargs)
         context['title'] = "Мастер рассылок"
-        context['description'] = "Мастер рассылок"
-        context['newsletter_count'] = newsletters.count()
-        context['newsletter_active_count'] = newsletters.filter(newslettersettings__status=True).count()
-        context['client_count'] = clients.count()
+        context['description'] = (f"Создано уже {newsletters.count()} рассылок, из них "
+                                  f"{newsletters.filter(newslettersettings__status=True).count()} активно рассылают "
+                                  f"информацию {clients.count()} клиентам")
         context['random_posts'] = random_posts
 
         return context

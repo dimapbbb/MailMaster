@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from newsletterapp.apps import NewsletterappConfig
 from newsletterapp.views import (NewsletterListView,
@@ -14,7 +15,7 @@ app_name = NewsletterappConfig.name
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
-    path('newsletters/<str:state>/', NewsletterListView.as_view(), name="newsletters_list"),
+    path('newsletters/<str:state>/', cache_page(60)(NewsletterListView.as_view()), name="newsletters_list"),
     path('create/', NewsletterCreateView.as_view(), name="newsletter_create"),
     path('update/<int:pk>/', NewsletterUpdateView.as_view(), name="newsletter_update"),
     path('read/<int:pk>/', NewsletterDetailView.as_view(), name="newsletter_read"),

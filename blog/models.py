@@ -15,7 +15,7 @@ class BlogPost(models.Model):
     content = models.TextField(verbose_name="Содержимое")
     image = models.ImageField(upload_to='blog_image/', verbose_name="Картинка", blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", blank=True, null=True)
     published_date = models.DateField(verbose_name="Дата публикации", blank=True, null=True)
     published_sign = models.CharField(choices=choices, default=False, verbose_name="Знак публикации")
 
