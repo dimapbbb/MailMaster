@@ -1,13 +1,11 @@
-from random import choices, sample
+from random import sample
 
-from config.settings import CACHE_ENABLED
 from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView, TemplateView
 from django.contrib.auth.mixins import AccessMixin
-from django.core.cache import cache
 
 from blog.models import BlogPost
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
