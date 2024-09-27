@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import AccessMixin
 
 from blog.models import BlogPost
 from config import settings
-from newsletterapp.models import Newsletter, NewsletterSettings
+from newsletterapp.models import Newsletter
 from recepients.models import Client
 from users.forms import UserRegisterForm, UserUpdateForm
 from users.models import Users
@@ -94,12 +94,14 @@ class UsersDetailView(UserAccessMixin, DetailView):
         newsletters_count = newsletters.count()
         clients_count = Client.objects.filter(user_id=pk).count()
 
-        public_posts = BlogPost.objects.filter(user_id=pk, published_sign=True)
-        all_views_count = sum([post.views_count for post in public_posts])
+        all_posts = BlogPost.objects.filter(user_id=pk)
+        public_posts = all_posts.filter(published_sign=True)
+        all_views_count = sum([post.views_count for post in all_posts])
 
         obj.newsletters_count = newsletters_count
         obj.active_newsletters_count = active_newsletters_count
         obj.clients_count = clients_count
+        obj.all_posts_count = all_posts.count()
         obj.public_posts_count = public_posts.count()
         obj.views_count = all_views_count
 

@@ -58,6 +58,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         if form.is_valid:
+            print(self.request.FILES)
             obj = form.save()
             obj.user = self.request.user
             obj.save()

@@ -1,4 +1,4 @@
-from random import choices
+from random import sample
 
 from django.contrib.auth.models import AnonymousUser
 from django.shortcuts import render, redirect
@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import AccessMixin
 from blog.models import BlogPost
 from newsletterapp.forms import NewsletterForm, NewsletterSettingsForm
 from newsletterapp.models import Newsletter, NewsletterSettings, NewsletterLogs
+from newsletterapp.services import get_cache_data
 from newsletterapp.utils import send_newsletter
 from recepients.models import Client
 
@@ -18,17 +19,18 @@ class HomeView(TemplateView):
     template_name = 'newsletterapp/home.html'
 
     def get_context_data(self, **kwargs):
-        clients = Client.objects.all()
-        newsletters = Newsletter.objects.all()
-        all_posts = BlogPost.objects.all()
-        random_posts = choices(all_posts, k=3)
+        clients = get_cache_data(key='clients', model=Client)
+        newsletters = get_cache_data(key='newsletters', model=Newsletter)
+        all_posts = get_cache_data(key='all_posts', model=BlogPost)
+
+        all_posts = all_posts.filter(published_sign='pub')
+        random_posts = sample(list(all_posts), k=3)
 
         context = super().get_context_data(**kwargs)
         context['title'] = "Мастер рассылок"
-        context['description'] = "Мастер рассылок"
-        context['newsletter_count'] = newsletters.count()
-        context['newsletter_active_count'] = newsletters.filter(newslettersettings__status=True).count()
-        context['client_count'] = clients.count()
+        context['description'] = (f"Создано уже {newsletters.count()} рассылок, из них "
+                                  f"{newsletters.filter(newslettersettings__status=True).count()} активно рассылают "
+                                  f"информацию {clients.count()} клиентам")
         context['random_posts'] = random_posts
 
         return context
@@ -98,12 +100,12 @@ class NewsletterCreateView(CreateView):
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
-        self.object = form.save()
+        self.object = form.save(commit=False)
         self.object.user = self.request.user
-        self.object.save()
 
         if formset.is_valid():
             formset.instance = self.object
+            self.object.save()
             formset.save()
 
         return super().form_valid(form)
@@ -153,9 +155,7 @@ class NewsletterDetailView(UserAccessMixin, DetailView):
         settings = NewsletterSettings.objects.get(newsletter=newsletter_id)
 
         obj.last_send_date = settings.last_send_date
-
         obj.send_time = settings.send_time
-
         obj.next_send_day = settings.next_send_day
 
         if settings.periodicity:

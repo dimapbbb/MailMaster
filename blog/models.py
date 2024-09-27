@@ -13,11 +13,11 @@ class BlogPost(models.Model):
 
     title = models.CharField(max_length=100, verbose_name="Заголовок")
     content = models.TextField(verbose_name="Содержимое")
-    image = models.ImageField(upload_to='blog_image/', verbose_name="Картинка", blank=True, null=True)
+    image = models.FileField(upload_to='blog_image/', verbose_name="Картинка", blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", blank=True, null=True)
     published_date = models.DateField(verbose_name="Дата публикации", blank=True, null=True)
-    published_sign = models.CharField(choices=choices, default=False, verbose_name="Знак публикации")
+    published_sign = models.CharField(choices=choices, default='no_pub', verbose_name="Знак публикации")
 
     views_count = models.PositiveIntegerField(default=0, verbose_name="Просмотры")
 
