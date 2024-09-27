@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django import forms
 
@@ -26,3 +26,10 @@ class NewsletterSettingsForm(forms.ModelForm):
         self.fields.get('next_send_day').widget.attrs.update({"min": datetime.now().date(),
                                                               "required": True})
         self.fields.get('send_time').widget.attrs.update({"required": True})
+
+    def clean(self):
+        day = self.cleaned_data.get('next_send_day')
+        time = self.cleaned_data.get('send_time')
+        if day == datetime.now().date() and time < datetime.now().time():
+            self.cleaned_data['next_send_day'] += timedelta(days=1)
+        return self.cleaned_data
