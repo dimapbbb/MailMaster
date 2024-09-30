@@ -24,7 +24,11 @@ class HomeView(TemplateView):
         all_posts = get_cache_data(key='all_posts', model=BlogPost)
 
         all_posts = all_posts.filter(published_sign='pub')
-        random_posts = sample(list(all_posts), k=3)
+
+        if len(all_posts) < 3:
+            k = len(all_posts)
+
+        random_posts = sample(list(all_posts), k=k)
 
         context = super().get_context_data(**kwargs)
         context['title'] = "Мастер рассылок"
