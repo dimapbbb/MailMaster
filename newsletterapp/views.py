@@ -26,9 +26,9 @@ class HomeView(TemplateView):
         all_posts = all_posts.filter(published_sign='pub')
 
         if len(all_posts) < 3:
-            k = len(all_posts)
-
-        random_posts = sample(list(all_posts), k=k)
+            random_posts = sample(list(all_posts), k=len(all_posts))
+        else:
+            random_posts = sample(list(all_posts), k=3)
 
         context = super().get_context_data(**kwargs)
         context['title'] = "Мастер рассылок"
