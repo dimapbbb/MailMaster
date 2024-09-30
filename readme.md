@@ -12,3 +12,9 @@ II) Загрузить фикстуры с первначальными данн
 
 III) Запустить сервер
 python manage.py runserver
+
+IV) Супер пользователь:       Менеджер рассылок:       Контент Менеджер:
+    admin                     NewsletterManager        ContentManager
+    zxcdfrt56                 zxcdfrt56                zxcdfrt56
+
+    
