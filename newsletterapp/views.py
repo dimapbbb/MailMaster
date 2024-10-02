@@ -25,6 +25,9 @@ class HomeView(TemplateView):
 
         all_posts = all_posts.filter(published_sign='pub')
 
+        if all_posts is None:
+            all_posts = []
+
         if len(all_posts) < 3:
             random_posts = sample(list(all_posts), k=len(all_posts))
         else:
@@ -32,7 +35,7 @@ class HomeView(TemplateView):
 
         context = super().get_context_data(**kwargs)
         context['title'] = "Мастер рассылок"
-        context['description'] = (f"Создано уже {newsletters.count()} рассылок, из них "
+        context['description'] = (f"Создано {newsletters.count()} рассылок, из них "
                                   f"{newsletters.filter(newslettersettings__status=True).count()} активно рассылают "
                                   f"информацию {clients.count()} клиентам")
         context['random_posts'] = random_posts
